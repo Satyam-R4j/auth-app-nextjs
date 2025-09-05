@@ -2,7 +2,7 @@ import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 
 connect();
 
@@ -36,16 +36,24 @@ export async function POST(request: NextRequest) {
             email: user.email,
         };
 
-
-        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!,{expiresIn:"1d"})
+        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
+            expiresIn: "1d",
+        });
 
         const response = NextResponse.json({
-            message:"Login successful",
-            success: true
-        })
+            message: "Login successful",
+            success: true,
+        });
 
-        response.cookies.set("token",token, {httpOnly:true, path:"/"})
+        response.cookies.set("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // must be false in dev
+            sameSite: "lax",
+            path: "/",
+        });
+        console.log("JWT Token set in cookie:", token); // 👈 debug log
 
+        return response;
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
