@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 
 export default function profilePage() {
     const router = useRouter();
-    const [data, setData] = React.useState("");
+    const [data, setData] = React.useState("nothing");
     const logout = async () => {
         try {
             await axios.get("/api/users/logout");
@@ -20,7 +20,7 @@ export default function profilePage() {
     };
 
     const getUserDetails = async () => {
-        const res = await axios.get("/api/user/me");
+        const res = await axios.get("/api/users/me");
         console.log(res.data);
         setData(res.data.data._id);
     };
@@ -30,12 +30,25 @@ export default function profilePage() {
             <h1 className="">Profile</h1>
             <hr />
             <p>Profile page</p>
+            <h2 className="p-2 rounded  bg-green-500 ">
+                {data === "nothing" ? (
+                    "Nothing"
+                ) : (
+                    <Link href={`/profile/${data}`}>{data}</Link>
+                )}
+            </h2>
             <hr />
             <button
                 onClick={logout}
                 className="bg-orange-500 hover:bg-orange-400 text-black font-bold py-2 px-4 rounded"
             >
                 Logout
+            </button>
+            <button
+                onClick={getUserDetails}
+                className="bg-green-800 hover:bg-orange-400 text-black font-bold py-2 px-4 rounded"
+            >
+                GetUser Details
             </button>
         </div>
     );
