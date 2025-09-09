@@ -5,20 +5,20 @@ import bcryptjs from "bcryptjs";
 
 export const sendEmail = async ({ email, emailType, userId }: any) => {
     try {
-        const hashedToke = await bcryptjs.hash(userId.toString(), 10);
+        const hashedToken = await bcryptjs.hash(userId.toString(), 10);
 
         if (emailType === "VERIFY") {
             await User.findByIdAndUpdate(userId, {
-                verifyToken: hashedToke,
+                verifyToken: hashedToken,
                 verifyTokenExpiry: Date.now() + 3600000,
             });
             await User.findByIdAndUpdate(userId, {
-                verifyToken: hashedToke,
+                verifyToken: hashedToken,
                 verifyTokenExpiry: Date.now() + 3600000,
             });
         } else if (emailType === "RESET") {
             await User.findByIdAndUpdate(userId, {
-                forgotPasswordToken: hashedToke,
+                forgotPasswordToken: hashedToken,
                 forgotPasswordTokenExpiry: Date.now() + 3600000,
             });
         }
@@ -41,11 +41,11 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
                     : "Reset your password",
             html: `<p>Click <a href="${
                 process.env.DOMAIN
-            }/verifyemail?token=${hashedToke}">here</a> to ${
+            }/verifyemail?token=${hashedToken}">here</a> to ${
                 emailType === "VERIFY"
                     ? "verify your email"
                     : "reset your password"
-            }or copy and paste the link below in your browser.<br> ${process.env.DOMAIN}/verifyemail?token=${hashedToke}</p>`,
+            }or copy and paste the link below in your browser.<br> ${process.env.DOMAIN}/verifyemail?token=${hashedToken}</p>`,
         };
 
         const mailresponse = await transport.sendMail(mailOptions);

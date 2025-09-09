@@ -50,6 +50,7 @@ export async function POST(request: NextRequest) {
             secure: process.env.NODE_ENV === "production", // must be false in dev
             sameSite: "lax",
             path: "/",
+            maxAge: 24 * 60 * 60, // 24 hours in seconds
         });
         console.log("JWT Token set in cookie:", token); // 👈 debug log
 

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 
 export default function LoginPage() {
@@ -17,9 +17,7 @@ export default function LoginPage() {
     const onLogin = async () => {
         try {
             setLoading(true);
-            const response = await axios.post("/api/users/login", user, {
-                withCredentials: true,
-            });
+            const response = await axios.post("/api/users/login", user);
             console.log("Login success", response.data);
             toast.success("Login success");
             router.push("/profile");
